@@ -1,10 +1,12 @@
 import React from "react";
 import { AbsoluteFill, interpolate, useCurrentFrame } from "remotion";
+import { FilmGrain } from "../components/FilmGrain";
 import { KineticText } from "../components/KineticText";
+import { PhotoLayer } from "../components/PhotoLayer";
 import { Scene } from "../components/Scene";
 import { DIM, GOLD, WHITE, fadeInOut, sceneTiming } from "../timeline";
 
-/** Scene 1 — Hero title (0–20s). */
+/** Scene 1 — Hero title (0–17s). Photo background + rotating rays + hero type. */
 export const Intro: React.FC = () => {
 	const frame = useCurrentFrame();
 	const { durationInFrames } = sceneTiming("intro");
@@ -16,7 +18,16 @@ export const Intro: React.FC = () => {
 
 	return (
 		<Scene>
-			{/* Rotating light rays */}
+			{/* Layer 1 — background: CR7 2013 photo, dimmed + blurred */}
+			<PhotoLayer
+				src="images/cr7-2013.jpg"
+				frame={frame}
+				fps={30}
+				durationInFrames={durationInFrames}
+				side="full"
+			/>
+
+			{/* Layer 2 — midground: rotating light rays */}
 			<AbsoluteFill style={{ justifyContent: "center", alignItems: "center", opacity: opacity * 0.9 }}>
 				<div
 					style={{
@@ -30,14 +41,17 @@ export const Intro: React.FC = () => {
 				/>
 			</AbsoluteFill>
 
+			{/* Layer 3 — foreground: hero typography */}
 			<div style={{ opacity, display: "flex", flexDirection: "column", alignItems: "center" }}>
 				<div
 					style={{
 						fontFamily: "Inter, sans-serif",
 						fontSize: 40,
-						letterSpacing: "0.9em",
+						letterSpacing: "1.1em",
+						fontWeight: 600,
 						color: DIM,
 						marginBottom: 30,
+						textIndent: "1.1em",
 					}}
 				>
 					THE GREATEST OF ALL TIME
@@ -56,6 +70,8 @@ export const Intro: React.FC = () => {
 					}}
 				/>
 			</div>
+
+			<FilmGrain frame={frame} />
 		</Scene>
 	);
 };

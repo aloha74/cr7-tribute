@@ -1,10 +1,13 @@
 import React from "react";
 import { interpolate, spring, useCurrentFrame } from "remotion";
+import { FilmGrain } from "../components/FilmGrain";
 import { KineticText } from "../components/KineticText";
+import { PhotoLayer } from "../components/PhotoLayer";
 import { Scene } from "../components/Scene";
+import { SceneTransition } from "../components/SceneTransition";
 import { DIM, GOLD, WHITE, fadeInOut, sceneTiming } from "../timeline";
 
-/** Scene 7 — Portugal, Euro 2016 (140–170s). */
+/** Scene 7 — Portugal, Euro 2016 (122–149s). Zoom transition in. */
 export const Portugal: React.FC = () => {
 	const frame = useCurrentFrame();
 	const { durationInFrames } = sceneTiming("portugal");
@@ -17,6 +20,15 @@ export const Portugal: React.FC = () => {
 
 	return (
 		<Scene>
+			{/* Layer 1 — background: CR7 in Portugal shirt, dimmed + blurred */}
+			<PhotoLayer
+				src="images/cr7-portugal-2018.jpg"
+				frame={frame}
+				fps={30}
+				durationInFrames={durationInFrames}
+				side="full"
+			/>
+
 			{/* Subtle red/green nod to the Portuguese flag */}
 			<div
 				style={{
@@ -29,6 +41,8 @@ export const Portugal: React.FC = () => {
 					background: "linear-gradient(90deg, #046a38 0 40%, #da291c 40% 100%)",
 				}}
 			/>
+
+			{/* Layer 3 — foreground */}
 			<div style={{ opacity, display: "flex", flexDirection: "column", alignItems: "center" }}>
 				<KineticText text="EURO 2016" frame={frame} fps={30} delay={15} color={GOLD} fontSize={170} />
 				<KineticText text="CHAMPIONS" frame={frame} fps={30} delay={45} color={WHITE} fontSize={120} />
@@ -68,6 +82,9 @@ export const Portugal: React.FC = () => {
 					ALL-TIME TOP INTERNATIONAL SCORER
 				</div>
 			</div>
+
+			<FilmGrain frame={frame} />
+			<SceneTransition frame={frame} type="zoom" />
 		</Scene>
 	);
 };

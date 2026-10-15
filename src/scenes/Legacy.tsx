@@ -1,9 +1,13 @@
 import React from "react";
 import { interpolate, spring, useCurrentFrame } from "remotion";
+import { FilmGrain } from "../components/FilmGrain";
+import { LyricHook } from "../components/LyricHook";
+import { PhotoLayer } from "../components/PhotoLayer";
 import { Scene } from "../components/Scene";
+import { SceneTransition } from "../components/SceneTransition";
 import { DIM, GOLD, WHITE, fadeInOut, sceneTiming } from "../timeline";
 
-/** Scene 9 — Legacy: the SIUUU celebration (200–230s). */
+/** Scene 9 — Legacy: the SIUUU celebration (175–201s). Flash transition in. */
 export const Legacy: React.FC = () => {
 	const frame = useCurrentFrame();
 	const { durationInFrames } = sceneTiming("legacy");
@@ -21,6 +25,14 @@ export const Legacy: React.FC = () => {
 
 	return (
 		<Scene>
+			{/* Layer 1 — background: celebration photo, dimmed full plate */}
+			<PhotoLayer
+				src="images/cr7-celebration.jpg"
+				frame={frame}
+				fps={30}
+				durationInFrames={durationInFrames}
+				side="full"
+			/>
 			{/* Shockwave */}
 			<div
 				style={{
@@ -63,9 +75,12 @@ export const Legacy: React.FC = () => {
 						);
 					})}
 				</div>
+				<div style={{ marginTop: 44 }}>
+					<LyricHook text="BUILT BY SACRIFICE" frame={frame} fps={30} delay={210} fontSize={40} />
+				</div>
 				<div
 					style={{
-						marginTop: 60,
+						marginTop: 44,
 						fontFamily: "Inter, sans-serif",
 						fontSize: 36,
 						letterSpacing: "0.5em",
@@ -79,6 +94,9 @@ export const Legacy: React.FC = () => {
 					THE LEGACY LIVES ON
 				</div>
 			</div>
+
+			<FilmGrain frame={frame} />
+			<SceneTransition frame={frame} type="flash" />
 		</Scene>
 	);
 };

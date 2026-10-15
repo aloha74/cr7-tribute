@@ -1,7 +1,9 @@
 import React from "react";
 import { interpolate, spring, useCurrentFrame } from "remotion";
+import { FilmGrain } from "../components/FilmGrain";
 import { KineticText } from "../components/KineticText";
 import { Scene } from "../components/Scene";
+import { SceneTransition } from "../components/SceneTransition";
 import { DIM, GOLD, WHITE, fadeInOut, sceneTiming } from "../timeline";
 
 const MILESTONES = [
@@ -9,7 +11,7 @@ const MILESTONES = [
 	{ year: "2002", label: "SPORTING CP", sub: "First-team debut at 17" },
 ];
 
-/** Scene 2 — Origins timeline (20–50s). */
+/** Scene 2 — Origins timeline (17–44s). Flash transition in. */
 export const Origins: React.FC = () => {
 	const frame = useCurrentFrame();
 	const { durationInFrames } = sceneTiming("origins");
@@ -65,6 +67,9 @@ export const Origins: React.FC = () => {
 					})}
 				</div>
 			</div>
+
+			<FilmGrain frame={frame} />
+			<SceneTransition frame={frame} type="flash" />
 		</Scene>
 	);
 };

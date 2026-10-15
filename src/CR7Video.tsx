@@ -44,15 +44,9 @@ export const CR7Video: React.FC = () => {
 				);
 			})}
 
-			{/*
-			 * AUDIO — "Something Just Like This" is copyrighted.
-			 * This project never downloads or bundles the track.
-			 * To add your own legally obtained copy:
-			 *   1. Save it as:  public/something-just-like-this.mp3
-			 *   2. Uncomment the line below:
-			 *
-			 * <Audio src={staticFile("something-just-like-this.mp3")} />
-			 */}
+			{/* Soundtrack: "Anthem of Victory" by Good_B_Music — Pixabay Content License
+			    (free for commercial use, monetization allowed). */}
+			<Audio src={staticFile("anthem-of-victory.mp3")} />
 		</AbsoluteFill>
 	);
 };

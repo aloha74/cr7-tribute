@@ -1,10 +1,12 @@
 import React from "react";
 import { interpolate, spring, useCurrentFrame } from "remotion";
+import { FilmGrain } from "../components/FilmGrain";
 import { KineticText } from "../components/KineticText";
 import { Scene } from "../components/Scene";
+import { SceneTransition } from "../components/SceneTransition";
 import { DIM, GOLD, WHITE, fadeInOut, sceneTiming } from "../timeline";
 
-/** Scene 3 — Manchester United, the number 7 (50–65s). */
+/** Scene 3 — Manchester United, the number 7 (44–57s). Zoom transition in. */
 export const United: React.FC = () => {
 	const frame = useCurrentFrame();
 	const { durationInFrames } = sceneTiming("united");
@@ -59,6 +61,9 @@ export const United: React.FC = () => {
 					</div>
 				</div>
 			</div>
+
+			<FilmGrain frame={frame} />
+			<SceneTransition frame={frame} type="zoom" />
 		</Scene>
 	);
 };
