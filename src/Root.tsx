@@ -1,12 +1,10 @@
 import React from "react";
 import { Composition } from "remotion";
-import { loadFont } from "@remotion/google-fonts/Anton";
-import { loadFont as loadInter } from "@remotion/google-fonts/Inter";
 import { CR7Video } from "./CR7Video";
 import { DURATION_FRAMES, FPS, VIDEO_HEIGHT, VIDEO_WIDTH } from "./timeline";
+import { loadLocalFonts } from "./fonts";
 
-loadFont(); // Anton — cinematic condensed display font
-loadInter(); // Inter — clean body font
+loadLocalFonts(); // Anton (display) + Inter (body) from public/fonts/
 
 export const RemotionRoot: React.FC = () => {
 	return (
