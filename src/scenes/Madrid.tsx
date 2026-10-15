@@ -1,90 +1,64 @@
 import React from "react";
-import { interpolate, useCurrentFrame } from "remotion";
-import { FilmGrain } from "../components/FilmGrain";
-import { KineticText } from "../components/KineticText";
-import { PhotoLayer } from "../components/PhotoLayer";
-import { Scene } from "../components/Scene";
+import { AbsoluteFill, useCurrentFrame } from "remotion";
+import { CinematicBg } from "../components/CinematicBg";
+import { BeatReveal } from "../components/BeatReveal";
+import { Bloom, Vignette, headline, kicker, GOLD } from "../components/PostFX";
 import { SceneTransition } from "../components/SceneTransition";
+import { FilmGrain } from "../components/FilmGrain";
 import { StatCounter } from "../components/StatCounter";
-import { DIM, GOLD, WHITE, fadeInOut, sceneTiming } from "../timeline";
+import { TIMELINE, FPS, hitFrame } from "../timeline";
 
-/** Scene 5 — Real Madrid era, 450 goals (83–109s). Whip transition in. */
+const SEG = TIMELINE.find((s) => s.id === "madrid")!;
+const DUR = SEG.end - SEG.start;
+
 export const Madrid: React.FC = () => {
-	const frame = useCurrentFrame();
-	const { durationInFrames } = sceneTiming("madrid");
-	const opacity = fadeInOut(frame, durationInFrames);
-	// Pulsing glow behind the counter
-	const glow = 0.5 + 0.5 * Math.sin((frame / 30) * Math.PI * 1.4);
-
-	return (
-		<Scene>
-			{/* Layer 2 — midground: CR7 free-kick photo (Real Madrid), left side */}
-			<PhotoLayer
-				src="images/cr7-freekick.jpg"
-				frame={frame}
-				fps={30}
-				durationInFrames={durationInFrames}
-				side="left"
-			/>
-
-			{/* Pulsing glow accent */}
-			<div
-				style={{
-					position: "absolute",
-					width: 1100,
-					height: 1100,
-					borderRadius: "50%",
-					background: `radial-gradient(circle, rgba(245,197,24,${0.1 + glow * 0.08}) 0%, transparent 65%)`,
-				}}
-			/>
-
-			{/* Layer 3 — foreground: 450 goals counter, right side */}
-			<div
-				style={{
-					opacity,
-					position: "absolute",
-					right: 130,
-					top: "50%",
-					transform: "translateY(-50%)",
-					display: "flex",
-					flexDirection: "column",
-					alignItems: "flex-end",
-					textAlign: "right",
-					maxWidth: 900,
-				}}
-			>
-				<div style={{ fontFamily: "Inter, sans-serif", fontSize: 38, fontWeight: 700, letterSpacing: "0.55em", color: DIM }}>
-					REAL MADRID · 2009 — 2018
-				</div>
-				<div style={{ margin: "40px 0" }}>
-					<StatCounter
-						from={0}
-						to={450}
-						frame={frame}
-						fps={30}
-						duration={180}
-						delay={40}
-						label="GOALS — ALL-TIME CLUB RECORD"
-						color={GOLD}
-						fontSize={230}
-					/>
-				</div>
-				<KineticText text="THE GREATEST GOALSCORER IN CLUB HISTORY" frame={frame} fps={30} delay={120} color={WHITE} fontSize={44} align="left" />
-				<div
-					style={{
-						marginTop: 36,
-						height: 3,
-						width: interpolate(frame, [140, 220], [0, 700], {
-							extrapolateLeft: "clamp",
-							extrapolateRight: "clamp",
-						}),
-						background: `linear-gradient(90deg, transparent, ${GOLD}, transparent)`,
-					}}
-				/>
-			</div>
-
-			<FilmGrain frame={frame} />
-			<SceneTransition frame={frame} type="whip" />
-		</Scene>
-	);
+  const frame = useCurrentFrame();
+  return (
+    <AbsoluteFill style={{ backgroundColor: "#000", overflow: "hidden" }}>
+      <CinematicBg
+        src="images/bg/cr7-freekick-bg.jpg"
+        durationInFrames={DUR}
+        zoom={1.1}
+        driftX={60}
+        grade="gold"
+        dim={0.5}
+      />
+      <AbsoluteFill
+        style={{ justifyContent: "center", alignItems: "center", flexDirection: "column" }}
+      >
+        <BeatReveal at={89.0} sceneStart={SEG.start}>
+          <p style={kicker(30)}>2009 · The Galáctico era</p>
+        </BeatReveal>
+        <div style={{ height: 30 }} />
+        <BeatReveal at={89.0} sceneStart={SEG.start} rise={120}>
+          <h1 style={headline(190)}>Real Madrid</h1>
+        </BeatReveal>
+        <div style={{ height: 50 }} />
+        <BeatReveal at={98.0} sceneStart={SEG.start} rise={110}>
+          <StatCounter
+            from={0}
+            to={450}
+            frame={frame}
+            fps={FPS}
+            duration={200}
+            delay={hitFrame(98.0, SEG.start)}
+            label="Goals in 438 games"
+            color={GOLD}
+            fontSize={220}
+          />
+        </BeatReveal>
+        <div style={{ height: 50 }} />
+        <BeatReveal at={104.3} sceneStart={SEG.start}>
+          <Bloom color={GOLD}>
+            <p style={{ ...headline(54, GOLD), letterSpacing: "0.06em" }}>
+              All-time top scorer
+            </p>
+          </Bloom>
+        </BeatReveal>
+      </AbsoluteFill>
+      <Vignette />
+      <FilmGrain frame={frame} />
+      <SceneTransition frame={frame} type={SEG.transition} />
+    </AbsoluteFill>
+  );
 };

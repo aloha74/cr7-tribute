@@ -1,68 +1,53 @@
 import React from "react";
-import { interpolate, useCurrentFrame } from "remotion";
-import { FilmGrain } from "../components/FilmGrain";
-import { KineticText } from "../components/KineticText";
-import { PhotoLayer } from "../components/PhotoLayer";
-import { Scene } from "../components/Scene";
+import { AbsoluteFill, useCurrentFrame } from "remotion";
+import { CinematicBg } from "../components/CinematicBg";
+import { BeatReveal } from "../components/BeatReveal";
+import { Bloom, Vignette, headline, kicker, GOLD } from "../components/PostFX";
 import { SceneTransition } from "../components/SceneTransition";
-import { DIM, WHITE, fadeInOut, sceneTiming } from "../timeline";
+import { FilmGrain } from "../components/FilmGrain";
+import { TIMELINE } from "../timeline";
 
-/** Scene 6 — Juventus (109–122s). Flash transition in. */
+const SEG = TIMELINE.find((s) => s.id === "juve")!;
+const DUR = SEG.end - SEG.start;
+
 export const Juve: React.FC = () => {
-	const frame = useCurrentFrame();
-	const { durationInFrames } = sceneTiming("juve");
-	const opacity = fadeInOut(frame, durationInFrames);
-	const stripeShift = interpolate(frame, [0, durationInFrames], [0, -120]);
-
-	return (
-		<Scene>
-			{/* Layer 1 — background: diagonal black/white stripes drifting */}
-			<div
-				style={{
-					position: "absolute",
-					inset: -300,
-					opacity: 0.1 * opacity,
-					background:
-						"repeating-linear-gradient(115deg, #ffffff 0px, #ffffff 46px, #000000 46px, #000000 92px)",
-					transform: `translateX(${stripeShift}px)`,
-				}}
-			/>
-			{/* Layer 2 — midground: CR7 Juventus 2019 photo, right side */}
-			<PhotoLayer
-				src="images/cr7-juve-2019.jpg"
-				frame={frame}
-				fps={30}
-				durationInFrames={durationInFrames}
-				side="right"
-			/>
-			{/* Layer 3 — foreground: typography, left side */}
-			<div
-				style={{
-					opacity,
-					position: "absolute",
-					left: 120,
-					top: "50%",
-					transform: "translateY(-50%)",
-					display: "flex",
-					flexDirection: "column",
-					alignItems: "flex-start",
-					maxWidth: 980,
-				}}
-			>
-				<div style={{ fontFamily: "Inter, sans-serif", fontSize: 38, fontWeight: 700, letterSpacing: "0.55em", color: DIM }}>
-					2018 — 2021
-				</div>
-				<div style={{ margin: "34px 0" }}>
-					<KineticText text="JUVENTUS" frame={frame} fps={30} delay={25} color={WHITE} fontSize={200} align="left" />
-				</div>
-				<KineticText text="CONQUERING ITALY" frame={frame} fps={30} delay={70} color={WHITE} fontSize={52} align="left" />
-				<div style={{ marginTop: 30, fontFamily: "Inter, sans-serif", fontSize: 30, color: DIM }}>
-					Back-to-back Serie A titles · 101 goals in 134 games
-				</div>
-			</div>
-
-			<FilmGrain frame={frame} />
-			<SceneTransition frame={frame} type="flash" />
-		</Scene>
-	);
+  const frame = useCurrentFrame();
+  return (
+    <AbsoluteFill style={{ backgroundColor: "#000", overflow: "hidden" }}>
+      <CinematicBg
+        src="images/bg/cr7-juve-2019-bg.jpg"
+        durationInFrames={DUR}
+        zoom={1.16}
+        driftY={-30}
+        grade="cool"
+        dim={0.55}
+      />
+      <AbsoluteFill
+        style={{ justifyContent: "center", alignItems: "center", flexDirection: "column" }}
+      >
+        <BeatReveal at={112.0} sceneStart={SEG.start}>
+          <p style={kicker(30)}>2018 · A new kingdom</p>
+        </BeatReveal>
+        <div style={{ height: 30 }} />
+        <BeatReveal at={112.0} sceneStart={SEG.start} rise={120}>
+          <h1 style={headline(200)}>Juventus</h1>
+        </BeatReveal>
+        <div style={{ height: 40 }} />
+        <BeatReveal at={115.2} sceneStart={SEG.start}>
+          <Bloom color={GOLD}>
+            <p style={{ ...headline(72, GOLD), letterSpacing: "0.05em" }}>
+              101 goals · 2 Scudetti
+            </p>
+          </Bloom>
+        </BeatReveal>
+        <div style={{ height: 26 }} />
+        <BeatReveal at={118.5} sceneStart={SEG.start}>
+          <p style={kicker(26, "rgba(255,255,255,0.6)")}>Turin's king</p>
+        </BeatReveal>
+      </AbsoluteFill>
+      <Vignette />
+      <FilmGrain frame={frame} />
+      <SceneTransition frame={frame} type={SEG.transition} />
+    </AbsoluteFill>
+  );
 };

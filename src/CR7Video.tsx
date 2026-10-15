@@ -1,6 +1,6 @@
 import React from "react";
 import { AbsoluteFill, Audio, Sequence, staticFile } from "remotion";
-import { FPS, TIMELINE } from "./timeline";
+import { TIMELINE } from "./timeline";
 import { Intro } from "./scenes/Intro";
 import { Origins } from "./scenes/Origins";
 import { United } from "./scenes/United";
@@ -36,8 +36,8 @@ export const CR7Video: React.FC = () => {
 				return (
 					<Sequence
 						key={seg.id}
-						from={seg.startSec * FPS}
-						durationInFrames={(seg.endSec - seg.startSec) * FPS}
+						from={seg.start}
+						durationInFrames={seg.end - seg.start}
 					>
 						<Component />
 					</Sequence>

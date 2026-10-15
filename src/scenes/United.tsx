@@ -1,69 +1,51 @@
 import React from "react";
-import { interpolate, spring, useCurrentFrame } from "remotion";
-import { FilmGrain } from "../components/FilmGrain";
-import { KineticText } from "../components/KineticText";
-import { Scene } from "../components/Scene";
+import { AbsoluteFill, useCurrentFrame } from "remotion";
+import { CinematicBg } from "../components/CinematicBg";
+import { BeatReveal } from "../components/BeatReveal";
+import { Bloom, Vignette, Watermark, headline, kicker, GOLD } from "../components/PostFX";
 import { SceneTransition } from "../components/SceneTransition";
-import { DIM, GOLD, WHITE, fadeInOut, sceneTiming } from "../timeline";
+import { FilmGrain } from "../components/FilmGrain";
+import { TIMELINE } from "../timeline";
 
-/** Scene 3 — Manchester United, the number 7 (44–57s). Zoom transition in. */
+const SEG = TIMELINE.find((s) => s.id === "united")!;
+const DUR = SEG.end - SEG.start;
+
 export const United: React.FC = () => {
-	const frame = useCurrentFrame();
-	const { durationInFrames } = sceneTiming("united");
-	const opacity = fadeInOut(frame, durationInFrames);
-	const pop = spring({ frame: frame - 20, fps: 30, config: { damping: 200, stiffness: 90 } });
-	const ringRotate = interpolate(frame, [0, durationInFrames], [0, 120]);
-
-	return (
-		<Scene>
-			<div style={{ opacity, display: "flex", alignItems: "center", gap: 110 }}>
-				{/* Giant number 7 with rotating ring */}
-				<div style={{ position: "relative", width: 520, height: 520, display: "flex", justifyContent: "center", alignItems: "center" }}>
-					<div
-						style={{
-							position: "absolute",
-							inset: 10,
-							borderRadius: "50%",
-							border: "3px dashed rgba(245,197,24,0.5)",
-							transform: `rotate(${ringRotate}deg) scale(${pop})`,
-						}}
-					/>
-					<div
-						style={{
-							position: "absolute",
-							inset: 55,
-							borderRadius: "50%",
-							border: "1px solid rgba(255,255,255,0.15)",
-							transform: `scale(${pop})`,
-						}}
-					/>
-					<div
-						style={{
-							fontFamily: "Anton, sans-serif",
-							fontSize: 380,
-							color: GOLD,
-							lineHeight: 1,
-							transform: `scale(${pop})`,
-							textShadow: `0 0 120px ${GOLD}66`,
-						}}
-					>
-						7
-					</div>
-				</div>
-
-				<div style={{ display: "flex", flexDirection: "column" }}>
-					<KineticText text="MANCHESTER UNITED" frame={frame} fps={30} delay={35} color={WHITE} fontSize={88} align="left" />
-					<div style={{ marginTop: 26, fontFamily: "Inter, sans-serif", fontSize: 40, fontWeight: 600, letterSpacing: "0.3em", color: GOLD }}>
-						2003
-					</div>
-					<div style={{ marginTop: 14, fontFamily: "Inter, sans-serif", fontSize: 30, color: DIM, maxWidth: 640 }}>
-						A teenager inherits the legendary number 7 shirt — and makes it his own.
-					</div>
-				</div>
-			</div>
-
-			<FilmGrain frame={frame} />
-			<SceneTransition frame={frame} type="zoom" />
-		</Scene>
-	);
+  const frame = useCurrentFrame();
+  return (
+    <AbsoluteFill style={{ backgroundColor: "#000", overflow: "hidden" }}>
+      <CinematicBg
+        src="images/bg/cr7-scores-bg.jpg"
+        durationInFrames={DUR}
+        zoom={1.12}
+        driftX={-50}
+        grade="red"
+        dim={0.55}
+      />
+      <Watermark opacity={0.07}>7</Watermark>
+      <AbsoluteFill
+        style={{ justifyContent: "center", alignItems: "center", flexDirection: "column" }}
+      >
+        <BeatReveal at={48.8} sceneStart={SEG.start}>
+          <p style={kicker(30)}>2003 · Theatre of Dreams</p>
+        </BeatReveal>
+        <div style={{ height: 30 }} />
+        <BeatReveal at={48.8} sceneStart={SEG.start} rise={120}>
+          <h1 style={headline(160)}>Manchester</h1>
+        </BeatReveal>
+        <BeatReveal at={50.2} sceneStart={SEG.start} rise={120}>
+          <Bloom color={GOLD}>
+            <h1 style={headline(160, GOLD)}>United</h1>
+          </Bloom>
+        </BeatReveal>
+        <div style={{ height: 34 }} />
+        <BeatReveal at={53} sceneStart={SEG.start}>
+          <p style={kicker(28, GOLD)}>First Ballon d'Or · 2008</p>
+        </BeatReveal>
+      </AbsoluteFill>
+      <Vignette />
+      <FilmGrain frame={frame} />
+      <SceneTransition frame={frame} type={SEG.transition} />
+    </AbsoluteFill>
+  );
 };

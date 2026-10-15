@@ -1,92 +1,75 @@
 import React from "react";
-import { useCurrentFrame } from "remotion";
-import { FilmGrain } from "../components/FilmGrain";
-import { KineticText } from "../components/KineticText";
-import { LyricHook } from "../components/LyricHook";
-import { PhotoLayer } from "../components/PhotoLayer";
-import { Scene } from "../components/Scene";
+import { AbsoluteFill, useCurrentFrame } from "remotion";
+import { CinematicBg } from "../components/CinematicBg";
+import { BeatReveal } from "../components/BeatReveal";
+import { Bloom, Vignette, headline, kicker, GOLD } from "../components/PostFX";
 import { SceneTransition } from "../components/SceneTransition";
+import { FilmGrain } from "../components/FilmGrain";
 import { StatCounter } from "../components/StatCounter";
-import { GOLD, WHITE, fadeInOut, sceneTiming } from "../timeline";
+import { TIMELINE, FPS, hitFrame } from "../timeline";
 
-/** Scene 4 — 5 Ballon d'Or + 5 Champions League (57–83s). Glitch transition in. */
+const SEG = TIMELINE.find((s) => s.id === "glory1")!;
+const DUR = SEG.end - SEG.start;
+
 export const Glory1: React.FC = () => {
-	const frame = useCurrentFrame();
-	const { durationInFrames } = sceneTiming("glory1");
-	const opacity = fadeInOut(frame, durationInFrames);
-
-	return (
-		<Scene>
-			{/* Layer 2 — midground: CR7 after the 2018 UCL final, right side */}
-			<PhotoLayer
-				src="images/cr7-ucl-final-2018.jpg"
-				frame={frame}
-				fps={30}
-				durationInFrames={durationInFrames}
-				side="right"
-			/>
-
-			{/* Layer 3 — foreground: counters on the left */}
-			<div
-				style={{
-					opacity,
-					position: "absolute",
-					left: 130,
-					top: "50%",
-					transform: "translateY(-50%)",
-					display: "flex",
-					flexDirection: "column",
-					alignItems: "flex-start",
-					maxWidth: 900,
-				}}
-			>
-				<KineticText text="GLORY, BY THE NUMBERS" frame={frame} fps={30} delay={10} color={WHITE} fontSize={72} align="left" />
-
-				<div style={{ display: "flex", gap: 120, marginTop: 60 }}>
-					<StatCounter
-						from={0}
-						to={5}
-						frame={frame}
-						fps={30}
-						duration={70}
-						delay={50}
-						label="BALLON D'OR"
-						color={GOLD}
-						fontSize={170}
-					/>
-					<div style={{ width: 2, background: "rgba(255,255,255,0.14)" }} />
-					<StatCounter
-						from={0}
-						to={5}
-						frame={frame}
-						fps={30}
-						duration={70}
-						delay={80}
-						label="CHAMPIONS LEAGUE"
-						color={WHITE}
-						fontSize={170}
-					/>
-				</div>
-
-				<div
-					style={{
-						marginTop: 56,
-						fontFamily: "Inter, sans-serif",
-						fontSize: 28,
-						letterSpacing: "0.4em",
-						color: "rgba(255,255,255,0.55)",
-					}}
-				>
-					2008 · 2013 · 2014 · 2016 · 2017
-				</div>
-
-				<div style={{ marginTop: 64 }}>
-					<LyricHook text="GREATNESS IS EARNED" frame={frame} fps={30} delay={170} fontSize={46} />
-				</div>
-			</div>
-
-			<FilmGrain frame={frame} />
-			<SceneTransition frame={frame} type="glitch" />
-		</Scene>
-	);
+  const frame = useCurrentFrame();
+  return (
+    <AbsoluteFill style={{ backgroundColor: "#000", overflow: "hidden" }}>
+      <CinematicBg
+        src="images/bg/cr7-ucl-final-2018-bg.jpg"
+        durationInFrames={DUR}
+        zoom={1.16}
+        driftY={-30}
+        grade="gold"
+        dim={0.75}
+      />
+      <AbsoluteFill
+        style={{ justifyContent: "center", alignItems: "center", flexDirection: "column" }}
+      >
+        <BeatReveal at={59.5} sceneStart={SEG.start}>
+          <p style={kicker(32)}>Glory, by the numbers</p>
+        </BeatReveal>
+        <div style={{ height: 60 }} />
+        <div style={{ display: "flex", flexDirection: "row", gap: 220, alignItems: "flex-start" }}>
+          <BeatReveal at={64.5} sceneStart={SEG.start} rise={110}>
+            <StatCounter
+              from={0}
+              to={5}
+              frame={frame}
+              fps={FPS}
+              duration={150}
+              delay={hitFrame(64.5, SEG.start)}
+              label="Ballon d'Or"
+              color={GOLD}
+              fontSize={230}
+            />
+          </BeatReveal>
+          <BeatReveal at={69.9} sceneStart={SEG.start} rise={110}>
+            <StatCounter
+              from={0}
+              to={5}
+              frame={frame}
+              fps={FPS}
+              duration={150}
+              delay={hitFrame(69.9, SEG.start)}
+              label="Champions League"
+              color="#ffffff"
+              fontSize={230}
+            />
+          </BeatReveal>
+        </div>
+        <div style={{ height: 60 }} />
+        <BeatReveal at={76} sceneStart={SEG.start}>
+          <Bloom color={GOLD}>
+            <p style={{ ...headline(58, GOLD), letterSpacing: "0.06em" }}>
+              Greatness is earned
+            </p>
+          </Bloom>
+        </BeatReveal>
+      </AbsoluteFill>
+      <Vignette />
+      <FilmGrain frame={frame} />
+      <SceneTransition frame={frame} type={SEG.transition} />
+    </AbsoluteFill>
+  );
 };
