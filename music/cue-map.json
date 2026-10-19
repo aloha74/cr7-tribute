@@ -1,0 +1,42 @@
+{
+  "total_sec": 63.8,
+  "sections": [
+    {
+      "name": "Prologue — heartbeat",
+      "start": 0.0,
+      "end": 5.0,
+      "treatment": "0:00-0:15 màn đen + chữ kinetic theo nhịp tim"
+    },
+    {
+      "name": "Ch. I — Nhẹ nhàng (piano + strings, Am)",
+      "start": 5.0,
+      "end": 22.0,
+      "treatment": "0:15-1:00 tuổi thơ Madeira; motif 'hy vọng' lần đầu xuất hiện"
+    },
+    {
+      "name": "Ch. II — Bi tráng (ostinato + timpani)",
+      "start": 22.0,
+      "end": 40.0,
+      "treatment": "1:00-2:10 máu/chấn thương; motif biến thể căng thẳng"
+    },
+    {
+      "name": "Ch. III — Tột đỉnh (epic)",
+      "start": 40.0,
+      "end": 63.8,
+      "treatment": "2:10-5:00 hat-trick/Euro/3-peat/SIUUU; motif khải hoàn"
+    }
+  ],
+  "ducking_windows": [
+    {
+      "start": 44.0,
+      "end": 48.0,
+      "purpose": "đá phạt TBN — tiếng sân vận động vượt lên"
+    },
+    {
+      "start": 54.0,
+      "end": 58.0,
+      "purpose": "SIUUU — tiếng hô vượt lên"
+    }
+  ],
+  "scale_to_full": "Full score 300s = sketch × ~4.7 thời lượng mỗi section; giữ nguyên cấu trúc, motif và vị trí ducking tương đối."
+}

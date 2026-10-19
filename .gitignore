@@ -1,0 +1,12 @@
+node_modules/
+out/
+*.log
+.DS_Store
+workspace/.tmp/
+public/v6/footage/
+public/v6/sfx/*.wav
+public/v6/score.wav
+public/v6/assets/*.png
+public/v6/assets/*.jpg
+.venv/
+footage-new/
